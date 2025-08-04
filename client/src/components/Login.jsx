@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { loginSchema, signSchema } from '../utils/validations';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axiosInstance from '../utils/axiosInstance';
+import { toast } from 'react-toastify';
 
 export const Login = () => {
   const [signState, setSignState] = useState('Log In');
@@ -21,8 +23,16 @@ export const Login = () => {
     reset();
     setSignState(state);
   }
-  function onSubmit(data) {
-    console.log(data);
+  async function onSubmit(data) {
+    try {
+      console.log(data);
+      const URL = signState == 'Sign Up' ? '/user/signup' : '/user/login';
+      const response = await axiosInstance.post(URL, data);
+      console.log(response);
+      toast(response.data.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Invalid credintials');
+    }
   }
   return (
     <div className="w-full min-h-screen bg-[#296cab] flex items-center">
@@ -65,7 +75,7 @@ export const Login = () => {
             Password
           </label>
           <input
-            type="text"
+            type="password"
             placeholder="*******"
             className="px-3 py-3 border-2 border-black rounded-sm"
             {...register('password')}
@@ -79,7 +89,7 @@ export const Login = () => {
                 Confirm Password
               </label>
               <input
-                type="text"
+                type="password"
                 placeholder="*******"
                 className="px-3 py-3 border-2 border-black rounded-sm"
                 {...register('confirmPassword')}

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { loginSchema, signSchema } from '../utils/validations';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { refine } from 'zod';
 
 export const Login = () => {
   const [signState, setSignState] = useState('Log In');

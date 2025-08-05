@@ -74,6 +74,17 @@ export const getUserDetails = asyncHandler(async (req, res) => {
   res.json({ success: true, user });
 });
 
+////////////////////////////////////////////////
+/////LOGOUT THE USER
+
+export const logoutUser = asyncHandler(async (req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    path: '/user/refresh',
+  });
+  res.status(200).json({ success: true, message: 'Logout succefully' });
+});
+
 //////////////////////////////////////////////
 ////GET REFRESH TOKEN
 

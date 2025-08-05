@@ -1,14 +1,15 @@
+import { useSelector } from 'react-redux';
+import { Navbar } from './Navbar';
+
 export const Home = () => {
+  const { user } = useSelector(store => store.auth);
   return (
     <div className="w-full bg-white min-h-screen flex flex-col">
-      <nav className="bg-gradient-to-r from-blue-400 to-cyan-300 text-black flex justify-center py-5">
-        <ul className="flex gap-10 items-center  text-l">
-          <li className="cursor-pointer">Home</li>
-          <li className="cursor-pointer">Profile</li>
-          <li className="cursor-pointer">Logout</li>
-        </ul>
-      </nav>
-      <div className="flex flex-1 justify-center items-center">
+      <Navbar />
+      <div className="flex flex-col flex-1 justify-center items-center">
+        <h1 className="font-bold text-2xl mb-2 ">
+          Welcome Back!..{user.username}
+        </h1>
         <img
           src="src/assets/react.svg"
           alt="Logo"

@@ -2,23 +2,37 @@ import { Login } from './components/Login';
 import { ToastContainer, toast } from 'react-toastify';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Home } from './components/Home';
-import { ProtectHome } from './components/ProtectedRoutes';
-import { useDispatch, useSelector } from 'react-redux';
+import { Profile } from './components/Profile';
+import { Protected } from './components/ProtectedRoutes';
+import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import axiosInstance from './utils/axiosInstance';
 import { setAuthLoading, setCredintials } from '../store/authSlice';
+import { IsLogged } from './components/IsLogged';
 
 const appRouter = createBrowserRouter([
   {
     path: '/login',
-    element: <Login />,
+    element: (
+      <IsLogged>
+        <Login />
+      </IsLogged>
+    ),
   },
   {
     path: '/',
     element: (
-      <ProtectHome>
+      <Protected>
         <Home />
-      </ProtectHome>
+      </Protected>
+    ),
+  },
+  {
+    path: '/profile',
+    element: (
+      <Protected>
+        <Profile />
+      </Protected>
     ),
   },
 ]);

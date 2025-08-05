@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
-export const ProtectHome = ({ children }) => {
+export const Protected = ({ children }) => {
   console.log('Print here');
   const { user, authLoading } = useSelector(store => store.auth);
   console.log('user fom potected', user);

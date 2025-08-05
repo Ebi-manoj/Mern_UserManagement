@@ -4,6 +4,7 @@ import userRouter from '../server/routes/user.routes.js';
 import { connectDb } from './config/connectDb.js';
 import { configDotenv } from 'dotenv';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 configDotenv();
 const app = express();
@@ -16,6 +17,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

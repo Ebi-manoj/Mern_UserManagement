@@ -4,6 +4,7 @@ import { loginSchema, signSchema } from '../utils/validation.js';
 import bcrypt from 'bcrypt';
 import { User } from '../models/user.model.js';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt.js';
+import jwt from 'jsonwebtoken';
 
 ///////////////////////////////////////////////
 ///verify Login
@@ -26,7 +27,7 @@ export const verifyLogin = asyncHandler(async (req, res) => {
   res.cookie('token', refreshToken, {
     httpOnly: true,
     secure: false,
-    path: '/auth/refresh',
+    path: '/user/refresh',
     sameSite: 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
@@ -64,9 +65,28 @@ export const userSignup = asyncHandler(async (req, res) => {
   res.status(201).json({ success: true, message: 'User created Successfully' });
 });
 
+///////////////////////////////////////////
+///GET USER DETAILS
 export const getUserDetails = asyncHandler(async (req, res) => {
   const { id } = req.user;
   const user = await User.findById(id).select('-password');
   if (!user) throw new CustomError('User not found', 400);
   res.json({ success: true, user });
+});
+
+//////////////////////////////////////////////
+////GET REFRESH TOKEN
+
+export const getRefreshToken = asyncHandler(async (req, res) => {
+  const token = req.cookies?.token;
+  if (!token) throw new CustomError('No token Provided', 401);
+
+  try {
+    const decoded = jwt.verify(token, process.env.REFRESH_TOKEN);
+    const user = await User.findById(decoded.id).select('-password');
+    const accessToken = generateAccessToken(user);
+    res.status(200).json({ accessToken, user, success: true });
+  } catch (error) {
+    throw new CustomError('Token expired', 403);
+  }
 });

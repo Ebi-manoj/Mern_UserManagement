@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  getRefreshToken,
   getUserDetails,
   userSignup,
   verifyLogin,
@@ -11,4 +12,5 @@ const router = express.Router();
 router.post('/login', verifyLogin);
 router.post('/signup', userSignup);
 router.get('/details', userAuthenticated, getUserDetails);
+router.get('/refresh', getRefreshToken);
 export default router;

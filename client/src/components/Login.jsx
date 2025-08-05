@@ -5,11 +5,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axiosInstance from '../utils/axiosInstance';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setCredintials } from '../../store/authSlice';
 
 export const Login = () => {
   const [signState, setSignState] = useState('Log In');
   const schema = signState == 'Sign Up' ? signSchema : loginSchema;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -35,6 +38,7 @@ export const Login = () => {
       if (signState == 'Sign Up') {
         handleSwitch();
       } else {
+        dispatch(setCredintials(response.data));
         navigate('/');
       }
     } catch (error) {

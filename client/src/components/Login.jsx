@@ -4,10 +4,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axiosInstance from '../utils/axiosInstance';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
   const [signState, setSignState] = useState('Log In');
   const schema = signState == 'Sign Up' ? signSchema : loginSchema;
+  const navigate = useNavigate();
 
   const {
     register,
@@ -28,8 +30,13 @@ export const Login = () => {
       console.log(data);
       const URL = signState == 'Sign Up' ? '/user/signup' : '/user/login';
       const response = await axiosInstance.post(URL, data);
-      console.log(response);
+      console.log(response.data);
       toast(response.data.message);
+      if (signState == 'Sign Up') {
+        handleSwitch();
+      } else {
+        navigate('/');
+      }
     } catch (error) {
       toast.error(error?.response?.data?.message || 'Invalid credintials');
     }

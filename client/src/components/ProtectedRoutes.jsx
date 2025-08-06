@@ -6,5 +6,11 @@ export const Protected = ({ children }) => {
   const { user, authLoading } = useSelector(store => store.auth);
   console.log('user fom potected', user);
   if (authLoading) return <div>loading...</div>;
-  return user ? children : <Navigate to="/login" />;
+  return user && !user.isAdmin ? children : <Navigate to="/login" />;
+};
+
+export const ProtectedAdmin = ({ children }) => {
+  const { user, authLoading } = useSelector(store => store.auth);
+  if (authLoading) return <div>loading...</div>;
+  return user && user.isAdmin ? children : <Navigate to="/login" />;
 };

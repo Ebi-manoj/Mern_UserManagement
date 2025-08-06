@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import { User } from '../models/user.model.js';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt.js';
 import jwt from 'jsonwebtoken';
+import cloudinary from 'cloudinary';
 
 ///////////////////////////////////////////////
 ///verify Login
@@ -72,6 +73,22 @@ export const getUserDetails = asyncHandler(async (req, res) => {
   const user = await User.findById(id).select('-password');
   if (!user) throw new CustomError('User not found', 400);
   res.json({ success: true, user });
+});
+
+////////////////////////////////////////////////
+/////PROFILE UPLOAD
+
+export const profileUpload = asyncHandler(async (req, res) => {
+  console.log('Reached here');
+  const { id } = req.user;
+  const user = await User.findById(id).select('-password');
+  if (user?.profileImg) {
+    const publicId = user.profileImg.split('/').pop().split('.')[0];
+    await cloudinary.uploader.destroy(`mern_react/profiles/${publicId}`);
+  }
+  user.profileImg = req.file.path;
+  await user.save();
+  res.json({ success: true, user, message: 'Uploaded succefully' });
 });
 
 ////////////////////////////////////////////////

@@ -3,12 +3,13 @@ import { ToastContainer, toast } from 'react-toastify';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Home } from './components/Home';
 import { Profile } from './components/Profile';
-import { Protected } from './components/ProtectedRoutes';
+import { Protected, ProtectedAdmin } from './components/ProtectedRoutes';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import axiosInstance from './utils/axiosInstance';
 import { setAuthLoading, setCredintials } from '../store/authSlice';
 import { IsLogged } from './components/IsLogged';
+import { Admindashboard } from './components/AdminDashboard';
 
 const appRouter = createBrowserRouter([
   {
@@ -33,6 +34,14 @@ const appRouter = createBrowserRouter([
       <Protected>
         <Profile />
       </Protected>
+    ),
+  },
+  {
+    path: '/admin/dashboard',
+    element: (
+      <ProtectedAdmin>
+        <Admindashboard />
+      </ProtectedAdmin>
     ),
   },
 ]);

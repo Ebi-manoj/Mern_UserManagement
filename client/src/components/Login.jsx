@@ -39,6 +39,8 @@ export const Login = () => {
         handleSwitch();
       } else {
         dispatch(setCredintials(response.data));
+        const { user } = response.data;
+        if (user.isAdmin) return navigate('/admin/dashboard');
         navigate('/');
       }
     } catch (error) {

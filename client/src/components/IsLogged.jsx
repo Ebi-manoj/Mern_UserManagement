@@ -3,6 +3,10 @@ import { Navigate } from 'react-router-dom';
 
 export const IsLogged = ({ children }) => {
   const { user } = useSelector(store => store.auth);
-  console.log(user);
-  return user ? <Navigate to="/" /> : children;
+
+  if (user && !user.isAdmin) return <Navigate to="/" />;
+
+  if (user && user.isAdmin) return <Navigate to="/admin/dashboard" />;
+
+  return children;
 };

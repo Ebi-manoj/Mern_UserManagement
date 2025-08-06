@@ -22,3 +22,14 @@ export const signSchema = z
     path: ['confirmPassword'],
     message: 'Password dont match',
   });
+
+export const editSchema = z.object({
+  username: z
+    .string()
+    .min(3, 'Min 3 characters required')
+    .regex(
+      /^(?!_+$)[a-zA-Z0-9_]+$/,
+      'Enter characters,only special characters not allowed'
+    ),
+  email: z.string().email('Enter a valid email'),
+});

@@ -11,6 +11,7 @@ export const Admindashboard = () => {
   const { users } = useSelector(store => store.usersList);
   const [displayUsers, setDisplayUsers] = useState([]);
   const [isModal, setisModal] = useState(false);
+  const [isEditModal, setisEditModal] = useState(false);
   const [isDelete, setisDelete] = useState(false);
   const [selectedId, setSlectedId] = useState(null);
   const dispatch = useDispatch();
@@ -32,9 +33,6 @@ export const Admindashboard = () => {
   function populate(newuser) {
     dispatch(setAllusers([...users, newuser]));
   }
-  function toggleModal() {
-    setisModal(!isModal);
-  }
   useEffect(() => {
     setDisplayUsers(users);
   }, [users]);
@@ -53,8 +51,8 @@ export const Admindashboard = () => {
   }, []);
 
   const handleEdit = id => {
-    toast.info(`Edit user with id: ${id}`);
-    // Navigate to edit page or open modal here
+    setSlectedId(id);
+    setisEditModal(true);
   };
 
   const handleDelete = async id => {
@@ -72,7 +70,17 @@ export const Admindashboard = () => {
 
   return (
     <>
-      {isModal && <CreateModal toggleModal={toggleModal} populate={populate} />}
+      {(isModal || isEditModal) && (
+        <CreateModal
+          closeModal={() => {
+            setisEditModal(false);
+            setisModal(false);
+          }}
+          populate={populate}
+          isEdit={isEditModal}
+          id={selectedId}
+        />
+      )}
       {isDelete && (
         <ConfirmModal
           show={true}
@@ -102,7 +110,7 @@ export const Admindashboard = () => {
           </div>
           <button
             className="bg-black text-white px-4 py-3 rounded-lg cursor-pointer"
-            onClick={toggleModal}
+            onClick={() => setisModal(true)}
           >
             Add User+
           </button>

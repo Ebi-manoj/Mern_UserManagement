@@ -3,10 +3,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { editSchema, signSchema } from '../utils/validations';
 import axiosInstance from '../utils/axiosInstance';
 import { toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUser } from '../../store/userSlice';
 
 export const CreateModal = ({ closeModal, populate, isEdit, id }) => {
-  console.log('hi');
+  const dispatch = useDispatch();
   const { users } = useSelector(store => store.usersList);
   const selectedUser = isEdit ? users.find(u => u._id === id) : null;
   const schema = isEdit ? editSchema : signSchema;
@@ -22,11 +23,19 @@ export const CreateModal = ({ closeModal, populate, isEdit, id }) => {
 
   async function onSubmit(data) {
     try {
-      const res = await axiosInstance.post('/user/signup', data);
-      const { createdUser } = res.data;
+      let res;
+      if (!isEdit) {
+        res = await axiosInstance.post('/user/signup', data);
+        const { createdUser } = res.data;
+        populate(createdUser);
+      } else {
+        res = await axiosInstance.put(`/admin/edit-user/${id}`, data);
+        dispatch(updateUser(res.data.user));
+      }
+      toast.success(res.data.message);
+
       reset();
       closeModal();
-      populate(createdUser);
     } catch (error) {
       console.log(error);
       toast.error(error?.response?.data?.message || 'Something went wrong');

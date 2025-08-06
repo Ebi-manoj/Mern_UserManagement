@@ -12,6 +12,6 @@ export const Protected = ({ children }) => {
 
 export const ProtectedAdmin = ({ children }) => {
   const { user, authLoading } = useSelector(store => store.auth);
-  if (authLoading) return <div>loading...</div>;
+  if (authLoading) return <Loading />;
   return user && user.isAdmin ? children : <Navigate to="/login" />;
 };

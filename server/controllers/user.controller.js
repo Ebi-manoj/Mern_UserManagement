@@ -50,7 +50,6 @@ export const verifyLogin = asyncHandler(async (req, res) => {
 ///user Signup
 
 export const userSignup = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const result = signSchema.safeParse(req.body);
   if (!result.success)
     throw new CustomError('Invalid format of data provided', 400);
@@ -61,9 +60,15 @@ export const userSignup = asyncHandler(async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  await User.create({ username, email, password: hashedPassword });
+  const createdUser = await User.create({
+    username,
+    email,
+    password: hashedPassword,
+  });
 
-  res.status(201).json({ success: true, message: 'User created Successfully' });
+  res
+    .status(201)
+    .json({ success: true, message: 'User created Successfully', createdUser });
 });
 
 ///////////////////////////////////////////

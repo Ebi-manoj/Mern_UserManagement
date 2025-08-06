@@ -9,9 +9,7 @@ export const userAuthenticated = asyncHandler(async (req, res, next) => {
     throw new CustomError('No token Found', 401);
   try {
     const decoded = jwt.verify(auth.split(' ')[1], process.env.ACCESS_TOKEN);
-    console.log('id from authmiddleware', decoded);
     req.user = decoded;
-    console.log('from midlleware', req.user);
     next();
   } catch (error) {
     res.status(403).json({ message: 'Invalid or expired token' });

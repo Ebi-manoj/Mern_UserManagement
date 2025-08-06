@@ -22,6 +22,10 @@ export const Admindashboard = () => {
     setDisplayUsers(filtered);
   }
 
+  function populate(newuser) {
+    dispatch(setAllusers([...users, newuser]));
+    setDisplayUsers([...users, newuser]);
+  }
   function toggleModal() {
     setisModal(!isModal);
   }
@@ -57,7 +61,7 @@ export const Admindashboard = () => {
 
   return (
     <>
-      {isModal && <CreateModal toggleModal={toggleModal} />}
+      {isModal && <CreateModal toggleModal={toggleModal} populate={populate} />}
       <div className="min-h-screen bg-gray-100 p-8">
         <h1 className="text-2xl font-bold text-gray-700 mb-6">
           Admin Dashboard

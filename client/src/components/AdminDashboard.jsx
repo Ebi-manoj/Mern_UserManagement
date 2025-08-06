@@ -2,14 +2,17 @@ import { useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAllusers } from '../../store/userSlice';
+import { setAllusers, removeUser } from '../../store/userSlice';
 import { useRef } from 'react';
 import { CreateModal } from './createModal';
+import ConfirmModal from './confirmModal';
 
 export const Admindashboard = () => {
   const { users } = useSelector(store => store.usersList);
   const [displayUsers, setDisplayUsers] = useState([]);
   const [isModal, setisModal] = useState(false);
+  const [isDelete, setisDelete] = useState(false);
+  const [selectedId, setSlectedId] = useState(null);
   const dispatch = useDispatch();
   const searchRef = useRef();
 
@@ -21,14 +24,20 @@ export const Admindashboard = () => {
     );
     setDisplayUsers(filtered);
   }
+  function handleDeleteClick(id) {
+    setSlectedId(id);
+    setisDelete(true);
+  }
 
   function populate(newuser) {
     dispatch(setAllusers([...users, newuser]));
-    setDisplayUsers([...users, newuser]);
   }
   function toggleModal() {
     setisModal(!isModal);
   }
+  useEffect(() => {
+    setDisplayUsers(users);
+  }, [users]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -49,19 +58,28 @@ export const Admindashboard = () => {
   };
 
   const handleDelete = async id => {
-    if (!window.confirm('Are you sure you want to delete this user?')) return;
+    console.log(id);
     try {
-      await axiosInstance.delete(`/admin/users/${id}`);
+      await axiosInstance.delete(`/admin/delete-user/${id}`);
       toast.success('User deleted successfully');
-      setUsers(prev => prev.filter(user => user._id !== id));
+      dispatch(removeUser(id));
     } catch (error) {
       toast.error(error?.response?.data?.message || 'Delete failed');
+    } finally {
+      setisDelete(false);
     }
   };
 
   return (
     <>
       {isModal && <CreateModal toggleModal={toggleModal} populate={populate} />}
+      {isDelete && (
+        <ConfirmModal
+          show={true}
+          onClose={() => setisDelete(false)}
+          onConfirm={() => handleDelete(selectedId)}
+        />
+      )}
       <div className="min-h-screen bg-gray-100 p-8">
         <h1 className="text-2xl font-bold text-gray-700 mb-6">
           Admin Dashboard
@@ -114,7 +132,7 @@ export const Admindashboard = () => {
                       </button>
                       <button
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded cursor-pointer"
-                        onClick={() => handleDelete(user._id)}
+                        onClick={() => handleDeleteClick(user._id)}
                       >
                         Delete
                       </button>

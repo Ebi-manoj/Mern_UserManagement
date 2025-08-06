@@ -1,6 +1,7 @@
 import express from 'express';
 import { errorHandling } from './middlewares/errorHandling.js';
 import userRouter from '../server/routes/user.routes.js';
+import adminRouter from '../server/routes/admin.routes.js';
 import { connectDb } from './config/connectDb.js';
 import { configDotenv } from 'dotenv';
 import cors from 'cors';
@@ -26,6 +27,7 @@ app.get('/users/random', (req, res) => {
 });
 
 app.use('/user', userRouter);
+app.use('/admin', adminRouter);
 
 app.use(errorHandling);
 app.listen(PORT, () => console.log(`Server running on PORT${PORT}`));

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Navbar } from './Navbar';
 import { CgProfile } from 'react-icons/cg';
 import { MdEmail } from 'react-icons/md';
@@ -6,31 +6,42 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PROFILE_URL } from '../utils/constant';
 import axiosInstance from '../utils/axiosInstance';
 import { setCredintials } from '../../store/authSlice';
+import { toast } from 'react-toastify';
+import { Loading } from './Loading';
 
 export const Profile = () => {
   const { user } = useSelector(store => store.auth);
+  const [isLoading, setisLoading] = useState(false);
+  const [isEdit, setisEdit] = useState(false);
   const fileRef = useRef();
   const dispatch = useDispatch();
 
   async function handleuplaod(event) {
     const file = event.target.files[0];
+    if (!file) return;
     const formData = new FormData();
     formData.append('file', file);
+    setisLoading(true);
     try {
       const res = await axiosInstance.post('/user/profile/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       event.target.value = '';
       dispatch(setCredintials(res.data));
+      toast('Profile updated succefully');
       console.log(res);
     } catch (error) {
+      toast.error(error?.response?.data?.message || 'Something went wrong');
       console.log(error);
+    } finally {
+      setisLoading(false);
     }
   }
   return (
     <div className="w-full bg-white min-h-screen flex flex-col">
       <Navbar />
       <div className="w-full flex flex-1 items-center">
+        {isLoading && <Loading />}
         <div className="w-8/12 flex mx-auto flex-col px-10 py-4 shadow-lg">
           <div className="relative w-[150px] h-[150px] mx-auto">
             <img

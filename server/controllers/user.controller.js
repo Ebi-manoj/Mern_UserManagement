@@ -40,6 +40,7 @@ export const verifyLogin = asyncHandler(async (req, res) => {
       username: findUser.username,
       email: findUser.email,
       isAdmin: findUser.isAdmin,
+      profileImg: findUser?.profileImg ?? null,
     },
     success: true,
     message: 'Logged in Successfully',

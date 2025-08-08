@@ -62,7 +62,6 @@ export const CreateModal = ({ closeModal, populate, isEdit, id }) => {
             name="username"
             placeholder="Username"
             className="w-full p-2 border rounded mt-5"
-            required
             {...register('username')}
           />
           {errors.username && (
@@ -73,7 +72,6 @@ export const CreateModal = ({ closeModal, populate, isEdit, id }) => {
             name="email"
             placeholder="Email"
             className="w-full p-2 border rounded mt-5"
-            required
             {...register('email')}
           />
           {errors.email && (

@@ -6,6 +6,8 @@ import { setAllusers, removeUser } from '../../store/userSlice';
 import { useRef } from 'react';
 import { CreateModal } from './createModal';
 import ConfirmModal from './confirmModal';
+import { FiLogOut } from 'react-icons/fi';
+import { useLogout } from '../utils/hooks';
 
 export const Admindashboard = () => {
   const { users } = useSelector(store => store.usersList);
@@ -16,6 +18,7 @@ export const Admindashboard = () => {
   const [selectedId, setSlectedId] = useState(null);
   const dispatch = useDispatch();
   const searchRef = useRef();
+  const handleLogout = useLogout();
 
   function handleSearch() {
     const value = searchRef.current.value;
@@ -89,6 +92,13 @@ export const Admindashboard = () => {
         />
       )}
       <div className="min-h-screen bg-gray-100 p-8">
+        <div
+          className="flex absolute right-10 top-5 items-center justify-center cursor-pointer gap-1"
+          onClick={handleLogout}
+        >
+          <h1 className=" underline font-semibold cursor-pointer">Logout</h1>
+          <FiLogOut />
+        </div>
         <h1 className="text-2xl font-bold text-gray-700 mb-6">
           Admin Dashboard
         </h1>

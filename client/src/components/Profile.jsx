@@ -84,9 +84,9 @@ export const Profile = () => {
                 <p className="font-bold">{user?.email}</p>
               </div>
             </div>
-            <button className="mx-auto bg-black cursor-pointer text-white px-5 py-2 rounded-lg ">
+            {/* <button className="mx-auto bg-black cursor-pointer text-white px-5 py-2 rounded-lg ">
               Edit ✏️
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
